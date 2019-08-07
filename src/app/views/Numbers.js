@@ -5,7 +5,7 @@ import {
   Divider,
   Form,
   Grid,
-  Header,
+  Header, Icon,
   Label,
   Segment,
 } from "semantic-ui-react";
@@ -17,7 +17,8 @@ import {
   operationsCombinations,
   postFix,
   postFixToInfix
-} from '../utils/make10/numbersUtils';
+} from '../utils/make10';
+import './Numbers.css';
 
 export default class Numbers extends Component {
   constructor(props) {
@@ -148,11 +149,7 @@ export default class Numbers extends Component {
       <Container style={{marginTop: 10}} text>
         <Segment padded>
           <Grid columns={3}>
-            <Grid.Column textAlign={'left'} verticalAlign={'middle'}>
-              {/*<Link style={{cursor: 'pointer', color: 'black'}} to={'/'}>*/}
-              {/*  <Icon link name='chevron left'/> Back*/}
-              {/*</Link>*/}
-            </Grid.Column>
+            <Grid.Column/>
             <Grid.Column verticalAlign={'middle'} textAlign={'center'}>
               <Header as={'h1'}>
                 Make 10
@@ -170,7 +167,8 @@ export default class Numbers extends Component {
           </Grid>
           <Divider hidden/>
           <Container textAlign={'center'}>
-            <p>Enter in a 4-digit train carriage number and a goal number.</p>
+            <p>Enter in train carriage's 4 digit numbers (e.g. 1 2 3 4) and a goal number (e.g. 10)</p>
+            <p>Use the 'Select operators' button to change what operations are used</p>
           </Container>
           <Settings/>
           <Container textAlign={'right'}>
@@ -206,7 +204,6 @@ export default class Numbers extends Component {
                 />)}
               <Form.Input
                 type='number'
-                // label={'Goal'}
                 label={{children: <label>Goal</label>}}
                 placeholder={'e.g. 10 or 24'}
                 value={isNaN(goal) ? '' : goal}
@@ -242,6 +239,32 @@ export default class Numbers extends Component {
             </Container> : null}
           </Container> : null}
         </Segment>
+        <Container>
+          <Grid>
+            <Grid.Column floated='left' width={8}>
+                <small className={'padded'}>
+                  {`Made by `}
+                  <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/">
+                    Sanjay
+                  </a>
+                </small>
+            </Grid.Column>
+            <Grid.Column floated='right' width={8} textAlign={'right'}>
+              <span>
+                <small className={'padded'}>
+                  <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/projects/make-ten">
+                    How does it work?
+                  </a>
+                </small>
+                <small className={'padded'}>
+                  <a target="_blank" rel="noopener noreferrer" href="https://github.com/snjay/make10">
+                    Source &nbsp; <Icon name={'github'}/>
+                  </a>
+              </small>
+              </span>
+            </Grid.Column>
+          </Grid>
+        </Container>
       </Container>
     )
   }

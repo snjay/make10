@@ -1,0 +1,11 @@
+a {
+  color: dimgrey;
+}
+
+a:hover {
+  color: black;
+}
+
+small.padded {
+  margin: 0 1em 0 1em;
+}
