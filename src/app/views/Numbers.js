@@ -85,7 +85,7 @@ export default class Numbers extends Component {
 
   render() {
     const {inputs, solutions, goal, showSolutions, solutionNumber, showSettings, selectedOperations} = this.state;
-    const allInputsValid = inputs.every(({value}) => !isNaN(value)) && !isNaN(goal);
+    const allInputsValid = inputs.every(({value}) => !isNaN(value) && value !== "") && !isNaN(goal);
     const numOpsSufficient = selectedOperations.length >= 1;
     // const inputsInvalid = !allInputsValid;
 
@@ -147,15 +147,15 @@ export default class Numbers extends Component {
 
     return (
       <Container style={{marginTop: 10}} text>
-        <Segment padded>
-          <Grid columns={3}>
+        <Segment>
+          <Grid columns={3} stackable>
             <Grid.Column/>
             <Grid.Column verticalAlign={'middle'} textAlign={'center'}>
-              <Header as={'h1'}>
+              <Header as={'h2'}>
                 Make 10
               </Header>
             </Grid.Column>
-            <Grid.Column textAlign={'right'} verticalAlign={'middle'}>
+            <Grid.Column verticalAlign={'middle'} textAlign={'right'}>
               <Button
                 basic
                 onClick={() => this.setState({
@@ -166,7 +166,7 @@ export default class Numbers extends Component {
             </Grid.Column>
           </Grid>
           <Divider hidden/>
-          <Container textAlign={'center'}>
+          <Container textAlign={'center'} text>
             <p>Enter in train carriage's 4 digit numbers (e.g. 1 2 3 4) and a goal number (e.g. 10)</p>
             <p>Use the 'Select operators' button to change what operations are used</p>
           </Container>
@@ -221,47 +221,52 @@ export default class Numbers extends Component {
               content={allInputsValid && solutionsExist ? 'Another solution?' : 'Find solution'}
               positive/>
           </Form>
-          {showSolutions && solutions ? <Container>
-            <Divider hidden/>
-            {solutions && solutions.length > 0 && !isNaN(solutionNumber) ?
-              <Container text textAlign={'center'}>
-                <Label basic size={'massive'}>
-                  {postFixToInfix(solutions[solutionNumber])}
-                  <Label.Detail>
-                    = {goal}
-                  </Label.Detail>
-                </Label>
-              </Container>
-              : null}
-            {solutions.length === 0 ? <Container textAlign={'center'}>
+          {showSolutions && solutions && (
+            <Container>
               <Divider hidden/>
-              <p>No solutions found :(</p>
-            </Container> : null}
-          </Container> : null}
+              {solutions && solutions.length > 0 && !isNaN(solutionNumber) && (
+                <Container text textAlign={'center'}>
+                  <Label basic size={'massive'}>
+                    {postFixToInfix(solutions[solutionNumber])}
+                    <Label.Detail>
+                      = {goal}
+                    </Label.Detail>
+                  </Label>
+                </Container>
+              )}
+              {solutions.length === 0 && (
+                <Container textAlign={'center'}>
+                  <Divider hidden/>
+                  <p>No solutions found :(</p>
+                  <Divider hidden/>
+                </Container>
+              )}
+            </Container>
+          )}
         </Segment>
         <Container>
-          <Grid>
-            <Grid.Column floated='left' width={8}>
-                <small className={'padded'}>
-                  {`Made by `}
-                  <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/">
-                    Sanjay
-                  </a>
-                </small>
-            </Grid.Column>
-            <Grid.Column floated='right' width={8} textAlign={'right'}>
-              <span>
-                <small className={'padded'}>
-                  <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/projects/make-ten">
-                    How does it work?
-                  </a>
-                </small>
-                <small className={'padded'}>
-                  <a target="_blank" rel="noopener noreferrer" href="https://github.com/snjay/make10">
-                    Source &nbsp; <Icon name={'github'}/>
-                  </a>
+          <Grid columns={3}>
+            <Grid.Column textAlign='left'>
+              <small className={'padded'}>
+                {`Made by `}
+                <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/">
+                  Sanjay
+                </a>
               </small>
-              </span>
+            </Grid.Column>
+            <Grid.Column textAlign={'center'}>
+              <small className={'padded'}>
+                <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/projects/make-ten">
+                  How does it work?
+                </a>
+              </small>
+            </Grid.Column>
+            <Grid.Column textAlign='right'>
+              <small className={'padded'}>
+                <a target="_blank" rel="noopener noreferrer" href="https://github.com/snjay/make10">
+                  Source&nbsp;<Icon name={'github'}/>
+                </a>
+              </small>
             </Grid.Column>
           </Grid>
         </Container>
