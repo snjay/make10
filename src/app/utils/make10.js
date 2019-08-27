@@ -4,17 +4,17 @@ export const operators = [...advancedOperators, ...basicOperators];
 
 export const evaluate = (expr) => {
   let stack = [];
-  for (let i = 0; i < expr.length; i++) {
-    let n = parseInt(expr[i], 10);
-    if (isNaN(n)) {
+  expr.forEach((tok) => {
+    let token = parseInt(tok, 10);
+    if (isNaN(token)) {
       // is operator
-      let operator = expr[i];
+      let operator = tok;
       // e.g. expr = [4, 2, -]
       //     stack = [4] -> [4, 2] -> [4, 2, -]
       //     popped: -, then (first) 2 and then 4 (second)
       //     stack.push(second - first) = stack.push(4-2);
-      let first = stack.pop();  // would pop 4
-      let second = stack.pop();  // would pop 2
+      let first = stack.pop();   // would pop 2
+      let second = stack.pop();  // would pop 4
       switch (operator) {
         case "+":
           stack.push(second + first);
@@ -38,9 +38,10 @@ export const evaluate = (expr) => {
           console.log('A problem has occurred.');
       }
     } else {
-      stack.push(n);
+      // is number
+      stack.push(token);
     }
-  }
+  });
   return stack[0];
 };
 
@@ -101,6 +102,8 @@ export const operationsCombinations = (ops, r) => {
     a.map(x => b.map(y => x.concat(y))).reduce((a, b) => a.concat(b)));
 };
 
+// Steinhaus–Johnson–Trotter algorithm
+// https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
 export const permutations = (numbers) => {
   if (numbers.length === 1) {
     return [numbers];
