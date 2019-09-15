@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import './App.css';
-import Numbers from "./app/views/Numbers";
 import {Route, Router, Switch} from "react-router-dom";
 import history from './history'
+import Numbers from "./app/views/Numbers";
+import './App.css';
 
 export default class App extends Component {
   render() {
