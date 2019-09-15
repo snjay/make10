@@ -1,5 +1,5 @@
-export const basicOperators = ["÷", "×", "–", "+"];
-export const advancedOperators = ["√", "^"];
+export const basicOperators = ["/", "*", "-", "+"];
+export const advancedOperators = ["^"];
 export const operators = [...advancedOperators, ...basicOperators];
 
 export const evaluate = (expr) => {
@@ -11,29 +11,29 @@ export const evaluate = (expr) => {
       let operator = tok;
       // e.g. expr = [4, 2, -]
       //     stack = [4] -> [4, 2] -> [4, 2, -]
-      //     popped: -, then (first) 2 and then 4 (second)
-      //     stack.push(second - first) = stack.push(4-2);
-      let first = stack.pop();   // would pop 2
-      let second = stack.pop();  // would pop 4
+      //     popped: -, then 2 ('first') and then 4 ('second')
+      //     e.g. stack.push(second-first) = stack.push(4-2);
+      let first = stack.pop();   // would pop 2 ('first')
+      let second = stack.pop();  // would pop 4 ('second')
       switch (operator) {
         case "+":
           stack.push(second + first);
           break;
-        case "–":
+        case "-":
           stack.push(second - first);
           break;
-        case "×":
+        case "*":
           stack.push(second * first);
           break;
-        case "÷":
+        case "/":
           stack.push(second / first);
           break;
         case "^":
           stack.push(Math.pow(second, first));
           break;
-        case "√":
-          stack.push(Math.pow(second, 1 / first));
-          break;
+        // case "√":
+        //   stack.push(Math.pow(second, 1 / first));
+        //   break;
         default:
           console.log('A problem has occurred.');
       }
@@ -45,8 +45,7 @@ export const evaluate = (expr) => {
   return stack[0];
 };
 
-export const postFix = (numbers, operations) => {
-  // todo: make sure lengths are valid
+export const formPostfixExpr = (numbers, operations) => {
   let expr = [numbers[0]];
   let rest = numbers.slice(1);
   rest.forEach((r, i) => {
@@ -57,69 +56,56 @@ export const postFix = (numbers, operations) => {
 
 export const postFixToInfix = (postfixExpr) => {
   let stack = [];
-  let precedence = {};
-  let allOperators = [""].concat(operators);
-  allOperators.forEach((o, i) => {
-    precedence[o] = allOperators.length - i;
-  });
-  // todo: minimise parenthesis https://www.mathblog.dk/tools/infix-postfix-converter/
+
+  function precedence(c) {
+    // if (c === '√') return 3;
+    if (c === '^') return 3;
+    if (c === '*') return 2;
+    if (c === '/') return 2;
+    if (c === '+') return 1;
+    if (c === '–') return 1;
+    return 0;
+  }
+
+  function rightPrecedence(c) {
+    if (c === '+') return 1;
+    if (c === '–') return 2;
+    if (c === '*') return 3;
+    if (c === '/') return 4;
+    if (c === '^') return 5;
+    // if (c === '√') return 6;
+    return 0;
+  }
+
   for (let i = 0; i < postfixExpr.length; i++) {
     let n = parseInt(postfixExpr[i], 10);
     if (isNaN(n)) {
-      // is operator
-      let operator = postfixExpr[i];
-      // beware of ordering: order of pop() is important.
-      let right = stack.pop();
-      let left = stack.pop();
-      // if (precedence[operator]) {
-      if (precedence[left.operator] < precedence[operator]) {
-        left.expr = `(${left.expr})`
-      }
-      if (precedence[right.operator] < precedence[operator]) {
-        right.expr = `(${right.expr})`
-      }
-      // }
-      // todo: old
-      // if (operator === "×" || operator === "÷" || operator === "^") {
-      //   if (left.operator === "+" || left.operator === "–") {
-      //     left.expr = `(${left.expr})`
-      //   }
-      //   if (right.operator === "+" || right.operator === "–" || right.operator === "^") {
-      //     right.expr = `(${right.expr})`
-      //   }
-      // }
-      stack.push({expr: `${left.expr}${operator}${right.expr}`, operator});
+      // is op
+      let op = postfixExpr[i];
+      // Pop the top 2 values from the stack.
+      // Put the operator, with the values as arguments and form a string.
+      // Encapsulate the resulted string with parenthesis.
+      // Push the resulted string back to stack.
+      if (stack.length < 2) return 'Invalid expression.';
+      stack.push({op, r: stack.pop(), l: stack.pop()});
     } else {
       // is number
-      stack.push({expr: n, operator: ""});
+      stack.push(n);
     }
   }
-  return stack[0].expr;
-};
-
-export const operationsCombinations = (ops, r) => {
-  return Array(r).fill(ops).reduce((a, b) =>
-    a.map(x => b.map(y => x.concat(y))).reduce((a, b) => a.concat(b)));
-};
-
-// Steinhaus–Johnson–Trotter algorithm
-// https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
-export const permutations = (numbers) => {
-  if (numbers.length === 1) {
-    return [numbers];
-  }
-  let perms = [];
-  // Get all permutations for numbers without including the first element
-  let tail = permutations(numbers.slice(1));
-  for (let i = 0; i < tail.length; i += 1) {
-    const sub = tail[i];
-    // Insert first number into every possible position of sub-permutation.
-    for (let j = 0; j <= sub.length; j += 1) {
-      const pre = sub.slice(0, j);
-      const mid = numbers[0];
-      const post = sub.slice(j);
-      perms.push(pre.concat([mid], post));
+  const printExpr = (x) => {
+    if (!isNaN(x)) return x;
+    let l = printExpr(x.l), r = printExpr(x.r);
+    if (isNaN(l) && (precedence(x.l.op) < precedence(x.op) || (x.l.op === x.op && x.op === '^'))) {
+      l = `(${l})`;
     }
-  }
-  return perms;
+    if (isNaN(r) && (rightPrecedence(x.r.op) <= rightPrecedence(x.op) || (x.l.op === x.op && (x.op === '-' || x.op === '/')))) {
+      r = `(${r})`;
+    }
+    return `${l}${x.op}${r}`;
+  };
+
+  return printExpr(stack.pop()).replace(/\*/g, '×');
 };
+
+

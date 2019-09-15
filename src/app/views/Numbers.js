@@ -12,13 +12,13 @@ import {
 import {
   operators,
   basicOperators,
-  permutations,
   evaluate,
-  operationsCombinations,
-  postFix,
+  formPostfixExpr,
   postFixToInfix
 } from '../utils/make10';
 import './Numbers.css';
+import {product} from "../utils/product";
+import {permutations} from "../utils/permutations";
 
 export default class Numbers extends Component {
   constructor(props) {
@@ -50,10 +50,10 @@ export default class Numbers extends Component {
     let solutions = [];
     if (inputs.every(({value}) => value !== null) && goal) {
       let numberPermutations = permutations(inputs.map(({value}) => value));
-      let operatorCombinations = operationsCombinations(selectedOperations.map(o => [o]), inputs.length - 1);
+      let operatorCombinations = product(selectedOperations.map(o => [o]), inputs.length - 1);
       for (let i = 0; i < numberPermutations.length; i++) {
         for (let j = 0; j < operatorCombinations.length; j++) {
-          let expr = postFix(numberPermutations[i], operatorCombinations[j]);
+          let expr = formPostfixExpr(numberPermutations[i], operatorCombinations[j]);
           if (evaluate(expr) === goal) {
             solutions.push(expr);
           }
@@ -68,7 +68,10 @@ export default class Numbers extends Component {
     this.setState({
       goal: '',
       inputs: Array.from([1, 2, 3, 4], i => {
-        return {id: i, value: ''}
+        return {
+          id: i,
+          value: ''
+        }
       }),
       solutions: [],
       solutionNumber: null,
@@ -87,8 +90,6 @@ export default class Numbers extends Component {
     const {inputs, solutions, goal, showSolutions, solutionNumber, showSettings, selectedOperations} = this.state;
     const allInputsValid = inputs.every(({value}) => !isNaN(value) && value !== "") && !isNaN(goal);
     const numOpsSufficient = selectedOperations.length >= 1;
-    // const inputsInvalid = !allInputsValid;
-
     const solutionsExist = showSolutions && solutions && solutions.length > 0;
 
     const Settings = () => {
@@ -118,28 +119,30 @@ export default class Numbers extends Component {
       };
 
       if (showSettings) {
-        return <Container>
-          <Divider hidden/>
-          <Form>
-            <Form.Group inline>
-              <label>Operations to use:</label>
-              {allOperations.map(o =>
-                <Form.Checkbox
-                  key={o}
-                  label={o}
-                  checked={operationSelected(o)}
-                  onChange={() => handleOperationClick(o)}/>
-              )}
-              <Form.Button
-                style={{margin: 7}}
-                basic
-                compact
-                size={'small'}
-                content={allOperations.length !== selectedOperations.length ? 'Select all' : 'Unselect all'}
-                onClick={handleSelectClick}/>
-            </Form.Group>
-          </Form>
-        </Container>
+        return (
+          <Container>
+            <Divider hidden/>
+            <Form>
+              <Form.Group inline>
+                <label>Operations to use:</label>
+                {allOperations.map(o =>
+                  <Form.Checkbox
+                    key={o}
+                    label={o === '*' ? '×' : o}
+                    checked={operationSelected(o)}
+                    onChange={() => handleOperationClick(o)}/>
+                )}
+                <Form.Button
+                  style={{margin: 7}}
+                  basic
+                  compact
+                  size={'small'}
+                  content={allOperations.length !== selectedOperations.length ? 'Select all' : 'Unselect all'}
+                  onClick={handleSelectClick}/>
+              </Form.Group>
+            </Form>
+          </Container>
+        )
       } else {
         return null;
       }
@@ -166,9 +169,10 @@ export default class Numbers extends Component {
             </Grid.Column>
           </Grid>
           <Divider hidden/>
+          {/* Main form */}
           <Container textAlign={'center'} text>
             <p>Enter in train carriage's 4 digit numbers (e.g. 1 2 3 4) and a goal number (e.g. 10)</p>
-            <p>Use the 'Select operators' button to change what operations are used</p>
+            <p>Click 'Select operators' to change what operations are used</p>
           </Container>
           <Settings/>
           <Container textAlign={'right'}>
@@ -218,9 +222,11 @@ export default class Numbers extends Component {
               type={'submit'}
               control={Button}
               disabled={!allInputsValid || !numOpsSufficient}
-              content={allInputsValid && solutionsExist ? 'Another solution?' : 'Find solution'}
+              content={allInputsValid && solutionsExist ? `Another solution?` : 'Find solution'}
               positive/>
           </Form>
+
+          {/* Solutions */}
           {showSolutions && solutions && (
             <Container>
               <Divider hidden/>
@@ -244,6 +250,7 @@ export default class Numbers extends Component {
             </Container>
           )}
         </Segment>
+        {/* Footer */}
         <Container>
           <Grid columns={3}>
             <Grid.Column textAlign='left'>
