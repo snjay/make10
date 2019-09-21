@@ -119,6 +119,10 @@ export default class Numbers extends Component {
                     checked={operationSelected(o)}
                     onChange={() => handleOperationClick(o)}/>
                 )}
+                <Form.Checkbox
+                  disabled
+                  label={`√`}
+                  checked={false}/>
                 <Form.Button
                   style={{margin: 7}}
                   basic
@@ -209,10 +213,9 @@ export default class Numbers extends Component {
               type={'submit'}
               control={Button}
               disabled={!allInputsValid || !numOpsSufficient}
-              content={allInputsValid && solutionsExist ? `Another solution?` : 'Find solution'}
+              content={allInputsValid && solutionsExist ? 'Another solution?' : 'Find solution'}
               positive/>
           </Form>
-
           {/* Solutions */}
           {showSolutions && solutions && (
             <Container>
