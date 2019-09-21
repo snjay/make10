@@ -1,6 +1,22 @@
+import {permutations} from "./permutations";
+import {product} from "./product";
+
 export const basicOperators = ["/", "*", "-", "+"];
 export const advancedOperators = ["^"];
-export const operators = [...advancedOperators, ...basicOperators];
+export const allOperators = [...advancedOperators, ...basicOperators];
+
+export const findSolutions = (numbers, operators, goal) => {
+  const numPerms = permutations(numbers);
+  const opCombs = product(operators, numbers.length - 1);
+  let solutions = [];
+  numPerms.forEach(numList => {
+    opCombs.forEach(opList => {
+      const expr = makePostFixExpr(numList, opList);
+      evaluate(expr) === goal && solutions.push(expr);
+    })
+  });
+  return solutions;
+};
 
 export const evaluate = (expr) => {
   let stack = [];
@@ -45,11 +61,11 @@ export const evaluate = (expr) => {
   return stack[0];
 };
 
-export const formPostfixExpr = (numbers, operations) => {
-  let expr = [numbers[0]];
-  let rest = numbers.slice(1);
+export const makePostFixExpr = (numList, opList) => {
+  let expr = [numList[0]];
+  let rest = numList.slice(1);
   rest.forEach((r, i) => {
-    expr = expr.concat([r, operations[i]]);
+    expr = expr.concat([r, opList[i]]);
   });
   return expr;
 };
@@ -77,11 +93,11 @@ export const postFixToInfix = (postfixExpr) => {
     return 0;
   }
 
-  for (let i = 0; i < postfixExpr.length; i++) {
-    let n = parseInt(postfixExpr[i], 10);
+  postfixExpr.forEach(tok => {
+    let n = parseInt(tok, 10);
     if (isNaN(n)) {
-      // is op
-      let op = postfixExpr[i];
+      // is operator
+      let op = tok;
       // Pop the top 2 values from the stack.
       // Put the operator, with the values as arguments and form a string.
       // Encapsulate the resulted string with parenthesis.
@@ -92,7 +108,7 @@ export const postFixToInfix = (postfixExpr) => {
       // is number
       stack.push(n);
     }
-  }
+  });
   const printExpr = (x) => {
     if (!isNaN(x)) return x;
     let l = printExpr(x.l), r = printExpr(x.r);
@@ -104,7 +120,6 @@ export const postFixToInfix = (postfixExpr) => {
     }
     return `${l}${x.op}${r}`;
   };
-
   return printExpr(stack.pop()).replace(/\*/g, '×');
 };
 

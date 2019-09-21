@@ -10,15 +10,12 @@ import {
   Segment,
 } from "semantic-ui-react";
 import {
-  operators,
   basicOperators,
-  evaluate,
-  formPostfixExpr,
-  postFixToInfix
+  allOperators,
+  postFixToInfix,
+  findSolutions
 } from '../utils/make10';
 import './Numbers.css';
-import {product} from "../utils/product";
-import {permutations} from "../utils/permutations";
 
 export default class Numbers extends Component {
   constructor(props) {
@@ -28,7 +25,7 @@ export default class Numbers extends Component {
       solutions: [],
       showSolutions: false,
       showSettings: false,
-      allOperations: operators.reverse(),
+      allOperations: allOperators.reverse(),
       selectedOperations: [],
       solutionNumber: null,
     }
@@ -47,21 +44,11 @@ export default class Numbers extends Component {
   calculate = () => {
     this.setState({showSolutions: false});
     let {inputs, goal, selectedOperations} = this.state;
-    let solutions = [];
     if (inputs.every(({value}) => value !== null) && goal) {
-      let numberPermutations = permutations(inputs.map(({value}) => value));
-      let operatorCombinations = product(selectedOperations.map(o => [o]), inputs.length - 1);
-      for (let i = 0; i < numberPermutations.length; i++) {
-        for (let j = 0; j < operatorCombinations.length; j++) {
-          let expr = formPostfixExpr(numberPermutations[i], operatorCombinations[j]);
-          if (evaluate(expr) === goal) {
-            solutions.push(expr);
-          }
-        }
-      }
+      let solutions = findSolutions(inputs.map(({value}) => value), selectedOperations.map(o => [o]), goal);
+      const solutionNumber = solutions.length > 0 ? 0 : null;
+      this.setState({solutions, showSolutions: true, solutionNumber});
     }
-    const solutionNumber = solutions.length > 0 ? 0 : null;
-    this.setState({solutions, showSolutions: true, solutionNumber});
   };
 
   clear = () => {
