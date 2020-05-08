@@ -141,7 +141,7 @@ export default class Numbers extends Component {
 
     return (
       <Container style={{marginTop: 10}} text>
-        <Segment raised stacked>
+        <Segment raised>
           <Grid columns={3} stackable>
             <Grid.Column/>
             <Grid.Column verticalAlign={'middle'} textAlign={'center'}>
