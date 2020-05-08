@@ -141,7 +141,7 @@ export default class Numbers extends Component {
 
     return (
       <Container style={{marginTop: 10}} text>
-        <Segment>
+        <Segment raised stacked>
           <Grid columns={3} stackable>
             <Grid.Column/>
             <Grid.Column verticalAlign={'middle'} textAlign={'center'}>
@@ -152,6 +152,7 @@ export default class Numbers extends Component {
             <Grid.Column verticalAlign={'middle'} textAlign={'right'}>
               <Button
                 basic
+                secondary
                 onClick={() => this.setState({
                   showSettings: !this.state.showSettings
                 })}>
@@ -170,6 +171,7 @@ export default class Numbers extends Component {
             <Form>
               <Form.Field
                 basic
+                compact
                 control={Button}
                 disabled={!allInputsValid}
                 content={'Clear'}
@@ -210,11 +212,12 @@ export default class Numbers extends Component {
             </Form.Group>
             <Form.Field
               fluid
+              size={'large'}
               type={'submit'}
               control={Button}
               disabled={!allInputsValid || !numOpsSufficient}
               content={allInputsValid && solutionsExist ? 'Another solution?' : 'Find solution'}
-              positive/>
+              primary/>
           </Form>
           {/* Solutions */}
           {showSolutions && solutions && (
