@@ -224,14 +224,27 @@ export default class Numbers extends Component {
             <Container>
               <Divider hidden/>
               {solutions && solutions.length > 0 && !isNaN(solutionNumber) && (
-                <Container text textAlign={'center'}>
-                  <Label basic size={'massive'}>
-                    {postFixToInfix(solutions[solutionNumber])}
-                    <Label.Detail>
-                      = {goal}
-                    </Label.Detail>
-                  </Label>
-                </Container>
+                <React.Fragment>
+                  <Container text textAlign={'center'}>
+                    <Label basic size={'massive'}>
+                      {postFixToInfix(solutions[solutionNumber])}
+                      <Label.Detail>
+                        = {goal}
+                      </Label.Detail>
+                    </Label>
+                  </Container>
+                  <Divider hidden/>
+                  <Container textAlign={'center'} text>
+                    <p>
+                    Solution #{solutionNumber+1} out of {solutions.length} possible solutions
+                    </p>
+                    {solutions.length > 1 && (
+                      <p>
+                        Press 'Another solution' for more solutions
+                      </p>
+                    )}
+                  </Container>
+                </React.Fragment>
               )}
               {solutions.length === 0 && (
                 <Container textAlign={'center'}>
