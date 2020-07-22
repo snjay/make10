@@ -35,4 +35,4 @@ An additional constraint that I placed upon myself for this project was to imple
 
 I initially wrote all the code in python using the wonderful itertools library but wanted to write a pure client-side web version of it so I didn't need to spin up a server.
 
-Read more at: https://sanjayn.com/projects/make-10/ for a fuller explanation with some code snippets explained.
+Read more at: https://sanjayn.com/make-10/ for a fuller explanation with some code snippets explained.
