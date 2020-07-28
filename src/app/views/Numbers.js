@@ -269,7 +269,7 @@ export default class Numbers extends Component {
             </Grid.Column>
             <Grid.Column textAlign={'center'}>
               <small className={'padded'}>
-                <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/make-10/">
+                <a target="_blank" rel="noopener noreferrer" href="https://sanjayn.com/make10/">
                   How does it work?
                 </a>
               </small>

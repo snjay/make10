@@ -8,7 +8,7 @@ In fact, it's extensible to act as a solver to find an arithmetic solution to an
 
 For example,
 
-```
+```plain
 Input: Numbers = [1, 2, 3, 4] and Goal = 10
 
 Output: A list of solutions, one of them could be: (1x2x3)+4 = 10
@@ -16,11 +16,11 @@ Output: A list of solutions, one of them could be: (1x2x3)+4 = 10
 
 ## Demo
 
-See: https://make10.sanjayn.com
+See: [https://make10.sanjayn.com](https://make10.sanjayn.com)
 
 ## Installation & usage
 
-```
+```bash
 $ npm install && npm start
 ```
 
