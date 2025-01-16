@@ -135,26 +135,14 @@ describe('eval', () => {
   });
 });
 
-// describe('makePostfix', () => {
-//   it('easy', () => {
-//     const et = new ExpressionTree();
-//     expect(et.eval()).toEqual(10)
-//     expect(expressionService.generatePostfixExprs([4, 3, 1, 2], ['*', '*', '-'])).toEqual([
-//       ['4', '3', '1', '2', '*', '*', '-'],
-//       ['4', '3', '1', '*', '2', '*', '-'],
-//       ['4', '3', '*', '1', '*', '2', '-'],
-//     ]);
-//   });
+describe('postfix', () => {
+  it('returns same simple postfix expression', () => {
+    const expressionTree = new ExpressionTree('5 6 /');
+    expect(expressionTree.postfix()).toEqual('5 6 /');
+  });
 
-//   it('hard', () => {
-//     expect(expressionService.generatePostfixExprs([4, 3, 2, 1], ['+', '*', '*'])).toEqual([
-//       '4',
-//       '3',
-//       '2',
-//       '*',
-//       '1',
-//       '*',
-//       '+',
-//     ]);
-//   });
-// });
+  it('returns complex postfix expression', () => {
+    const expressionTree = new ExpressionTree('7 1 - 5 * 4 /');
+    expect(expressionTree.postfix()).toEqual('7 1 - 5 * 4 /');
+  });
+});
