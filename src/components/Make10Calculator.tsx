@@ -3,17 +3,17 @@ import { Button, Center, Container, Group, NumberInput, Paper, Stack, Text, Titl
 
 import Make10Solver from '../services/make-10-solver';
 
-import CarriageNumberInput from '../components/CarriageNumberInput';
-import SelectOperators from '../components/SelectOperators';
-import ResetButton from '../components/ResetButton';
-import Solution from '../components/Solution';
-import NoSolutionsFound from '../components/NoSolutionsFound';
+import CarriageNumberInput from './CarriageNumberInput';
+import SelectOperators from './SelectOperators';
+import ResetButton from './ResetButton';
+import Solution from './Solution';
+import NoSolutionsFound from './NoSolutionsFound';
 
 import { COLOURS } from '../constants/colours';
 import { OPERATORS, humanReadableSign } from '../constants/operators';
 import { DEFAULT_GOAL } from '../constants/numbers';
 
-export default function Make10() {
+export default function Make10Calculator() {
   const [numbers, setNumbers] = useState('');
   const [goal, setGoal] = useState(`${DEFAULT_GOAL}`);
   const [solutions, setSolutions] = useState<string[]>([]);

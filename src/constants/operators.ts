@@ -1,5 +1,3 @@
-// export const BASIC_OPERATORS = ["/", "*", "-", "+"];
-
 export enum OPERATORS {
   plus = '+',
   minus = '-',

@@ -1,10 +1,10 @@
 import Footer from './components/Footer';
-import Make10 from './components/Make10';
+import Make10Calculator from './components/Make10Calculator';
 
 function App() {
   return (
     <>
-      <Make10 />
+      <Make10Calculator />
       <Footer />
     </>
   );

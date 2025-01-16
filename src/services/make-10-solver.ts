@@ -2,6 +2,7 @@ import { product } from '../utils/product';
 import { permutations } from '../utils/permutations';
 import { generateOrderedPostfixExprs } from '../utils/generate-postfix-expressions';
 import ExpressionTree from './expression-tree';
+import { BRACKET_STYLE } from '../constants/bracket-style';
 
 export default class Make10Solver {
   constructor(
@@ -14,11 +15,7 @@ export default class Make10Solver {
     const solutions = this.buildAllPossiblePostfixExprs()
       .map((expression) => new ExpressionTree(expression))
       .filter((expression) => expression.eval() === this.goal)
-      .map((expression) =>
-        expression.infix({
-          simplifiedBrackets: true,
-        }),
-      );
+      .map((expression) => expression.infix(BRACKET_STYLE.SIMPLIFIED));
 
     return [...new Set(solutions)];
   };

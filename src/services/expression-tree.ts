@@ -1,4 +1,5 @@
 import { OPERATORS } from '../constants/operators';
+import { BRACKET_STYLE } from '../constants/bracket-style';
 
 interface Node {
   value: string;
@@ -7,7 +8,7 @@ interface Node {
 }
 
 export default class ExpressionTree {
-  public root?: Node;
+  private root?: Node;
 
   constructor(postfixExpression: string) {
     const postfixExpr = postfixExpression.split(' ');
@@ -48,16 +49,16 @@ export default class ExpressionTree {
         const second = parseFloat(item1);
         const first = parseFloat(item2);
         switch (operator) {
-          case '+':
+          case OPERATORS.plus:
             stack.push(`${first + second}`);
             break;
-          case '-':
+          case OPERATORS.minus:
             stack.push(`${first - second}`);
             break;
-          case '*':
+          case OPERATORS.multiply:
             stack.push(`${first * second}`);
             break;
-          case '/':
+          case OPERATORS.divide:
             stack.push(`${first / second}`);
             break;
           case '^':
@@ -75,19 +76,15 @@ export default class ExpressionTree {
     return parseFloat(stack[0]);
   };
 
-  public infix = ({ simplifiedBrackets } = { simplifiedBrackets: true }): string => {
-    if (simplifiedBrackets) {
-      return this.toInfixWithBracket(this.root);
+  public infix = (bracketStyle: BRACKET_STYLE = BRACKET_STYLE.SIMPLIFIED): string => {
+    if (bracketStyle === BRACKET_STYLE.SIMPLIFIED) {
+      return this.toInfixWithPrecedence(this.root);
     }
     return this.toInfix(this.root).replace(/^\(/, '').replace(/\)$/, '');
   };
 
   public postfix = (): string => {
     return this.toPostfix(this.root);
-  };
-
-  public tree = (): object | boolean => {
-    return this.toTree(this.root);
   };
 
   private toPostfix = (node?: Node): string => {
@@ -112,14 +109,14 @@ export default class ExpressionTree {
     throw new Error('Should not reach here!');
   };
 
-  private toInfixWithBracket = (node?: Node): string => {
+  private toInfixWithPrecedence = (node?: Node): string => {
     if (!node) {
       return '';
     } else if (isNumber(node.value)) {
       return `${node.value}`;
     } else if (isOperator(node.value)) {
-      let l = this.toInfixWithBracket(node.l);
-      let r = this.toInfixWithBracket(node.r);
+      let l = this.toInfixWithPrecedence(node.l);
+      let r = this.toInfixWithPrecedence(node.r);
       const cPrecedence = this.precedence(node.value);
       const lPrecedence = this.precedence(node.l?.value);
       const rPrecedence = this.precedence(node.r?.value);
@@ -142,36 +139,18 @@ export default class ExpressionTree {
       return 4;
     }
     switch (s) {
-      case '+':
+      case OPERATORS.plus:
         return 1;
-      case '-':
+      case OPERATORS.minus:
         return 1;
-      case '*':
+      case OPERATORS.multiply:
         return 2;
-      case '/':
+      case OPERATORS.divide:
         return 2;
       case '^':
         return 3;
     }
     return 0;
-  };
-
-  private toTree = (node?: Node): object => {
-    if (!node) {
-      return {};
-    } else if (isNumber(node.value)) {
-      return {
-        [node.value]: true,
-      };
-    } else if (isOperator(node.value)) {
-      return {
-        [node.value]: {
-          ...this.toTree(node.l),
-          ...this.toTree(node.r),
-        },
-      };
-    }
-    throw new Error('Should not reach here!');
   };
 }
 
@@ -189,18 +168,3 @@ const isNumber = (s?: string) => {
   }
   return /[\d]/.test(s);
 };
-
-// console.log(new ExpressionTree(a).infix());
-// console.log(new ExpressionTree(b).infix());
-// console.log(new ExpressionTree(c).infix());
-
-// console.log(Tree.from((new ExpressionTree(a)).tree()).render());
-// console.log(Tree.from((new ExpressionTree(b)).tree()).render());
-// console.log(Tree.from((new ExpressionTree(c)).tree()).render());
-
-// console.log(new ExpressionTree('1 2 + 3 /').infix2());
-// console.log(new ExpressionTree('1 2 / 3 + 4 -').infix2());
-// console.log(new ExpressionTree('1 2 / 3 + 4 -').infix2());
-
-// // ((1*2)*3)+4
-// console.log(new ExpressionTree('1 2 3 - + 4 5 - 6 7 - 8 + / * ').infix2());
