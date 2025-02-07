@@ -7,9 +7,21 @@ interface SolutionProps {
   goal: string;
 }
 
+const solutionStyling = {
+  letterSpacing: rem(2.75),
+  whiteSpace: 'nowrap',
+};
+
+const goalStyling = {
+  paddingLeft: rem(30),
+  color: '#797979',
+  whiteSpace: 'nowrap',
+};
+
 const Solution = (props: SolutionProps) => {
   const { solutionIdx, solution, goal, totalSolutions } = props;
 
+  const formattedSolution = solution.replaceAll('*', '×').replaceAll('-', '–');
   return (
     <>
       <Center my={rem(30)}>
@@ -17,8 +29,7 @@ const Solution = (props: SolutionProps) => {
           {(!!solutionIdx || solutionIdx === 0) && (
             <Title>
               <Center>
-                <span style={{ letterSpacing: rem(2.75), whiteSpace: 'nowrap' }}>{solution}</span>{' '}
-                <span style={{ paddingLeft: rem(30), color: '#797979', whiteSpace: 'nowrap' }}>= {goal}</span>
+                <span style={solutionStyling}>{formattedSolution}</span> <span style={goalStyling}>= {goal}</span>
               </Center>
             </Title>
           )}
